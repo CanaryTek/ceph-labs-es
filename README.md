@@ -1,15 +1,12 @@
-# CloudLab: Practicas básicas de Ceph en español
+# CloudLab: Prácticas básicas de Ceph
 
 En este repo se definen una seria de prácticas para aprender el funcionamiento básico de Ceph
 
 Las prácticas estan definidas para que se puedan hacer en un entorno desplegado con el repo https://github.com/CanaryTek/clab-ceph.git
 
-## Practicas
+## Prácticas
 
-## Labs
-
-  * [Lab 1: Deploy_Ceph](labs/01_Deploy_Ceph.md)
-  * [Lab 2: Pools](labs/02_Pools.md)
+  * [Pools](Pools.md)
   * [Lab 3: RBD_Rados_Block_Device](labs/03_RBD_Rados_Block_Device.md)
   * [Lab 4: Data Placement](labs/04_Data_Placement.md)
   * [Lab 5: Crush Maps](labs/05_Crush_Maps.md)
