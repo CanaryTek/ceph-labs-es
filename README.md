@@ -7,7 +7,7 @@ Las prácticas estan definidas para que se puedan hacer en un entorno desplegado
 ## Prácticas
 
   * [Pools](Pools.md)
-  * [Lab 3: RBD_Rados_Block_Device](labs/03_RBD_Rados_Block_Device.md)
+  * [RBD_Rados_Block_Device](RBD_Rados_Block_Device.md)
   * [Lab 4: Data Placement](labs/04_Data_Placement.md)
   * [Lab 5: Crush Maps](labs/05_Crush_Maps.md)
   * [Lab 6: CephFS](labs/06_CephFS.md)
