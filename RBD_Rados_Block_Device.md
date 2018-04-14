@@ -2,13 +2,13 @@
 
 RBD es el interfaz de servicio de almacenamiento en modo bloques de Ceph
 
-## Preparacion
+## Preparación
 
-  * En las versiones más recientes de Ceph, el pool para el servicio RBD no se crea automaticamente, asi que lo primero que hay que hacer es crear el pool
+  * En las versiones más recientes de Ceph, el pool para el servicio RBD no se crea automáticamente, así que lo primero que hay que hacer es crear el pool
 
         ceph osd pool create rbd 128 128
 
-  * Podemos darle un nombre diferente, o incluso usar diferentes pools para RBD (p.ej. para tener unos volumenes alojados en discos de rotación y otros en discos SSD). En caso de tener varios pools, podemos indicar el pool sobre el que queremos trabajar con el parámetro "-p NOMBRE_DEL_POOL"
+  * Podemos darle un nombre diferente, o incluso usar diferentes pools para RBD (p.ej. para tener unos volúmenes alojados en discos de rotación y otros en discos SSD). En caso de tener varios pools, podemos indicar el pool sobre el que queremos trabajar con el parámetro "-p NOMBRE_DEL_POOL"
 
   * Creamos un volumen
 
@@ -18,21 +18,21 @@ RBD es el interfaz de servicio de almacenamiento en modo bloques de Ceph
 
         rados ls -p rbd
 
-  * Listamos los volumenes RBD creados
+  * Listamos los volúmenes RBD creados
 
         rbd list
 
-  * Podemos obtener informacion detallada del volumen
+  * Podemos obtener información detallada del volumen
 
         rbd info vm01-disk0
 
-## Uso de volumenes RBD desde una maquina Linux
+## Uso de volúmenes RBD desde una máquina Linux
 
   * Mapeamos el volumen RBD a un dispositivo de bloques
 
         rbd map vm01-disk0
 
-  * Dependiendo de las versiones de Ceph y del Kernel, nos puede dar un error diciendo que algunas "features" no estan soportadas por el kernel. Esto pasa porque el driver RBD esta incluido en la base de codigo del kernel, y puede ser más antiguo que la version de Ceph instalada. Si nos da ese error, tendremos que desactivar esas "features" en el pool RBD
+  * Dependiendo de las versiones de Ceph y del Kernel, nos puede dar un error diciendo que algunas "features" no están soportadas por el kernel. Esto pasa porque el driver RBD esta incluido en la base de código del kernel, y puede ser más antiguo que la versión de Ceph instalada. Si nos da ese error, tendremos que desactivar esas "features" en el pool RBD
 
         rbd feature disable POOL_RBD FEATURE
 
@@ -56,13 +56,13 @@ RBD es el interfaz de servicio de almacenamiento en modo bloques de Ceph
         df
         rbd du
 
-  * Si listamos los objetos del pool a bajo nivel, veremos que RBD nos esta troceando la informacion en muchos objetos, para hacerlos mas manejables y para aprovechar mejor las caracteristicas de Ceph de distribuir la carga entre todos los nodos
+  * Si listamos los objetos del pool a bajo nivel, veremos que RBD nos esta troceando la información en muchos objetos, para hacerlos mas manejables y para aprovechar mejor las características de Ceph de distribuir la carga entre todos los nodos
 
         rados ls -p rbd
 
   * Como puede verse, hay muchos objetos con nombre rbd_data.ID.SEGMENT, donde ID identifica el volumen RBD (que podemos ver en el atributo "block_name_prefix" en la salida del comando "rbd info VOLUMEN_RBD"
 
-## Redimensionado de volumenes RBD
+## Redimensionado de volúmenes RBD
 
   * Podemos extender en caliente un volumen RBD
 
@@ -77,7 +77,7 @@ RBD es el interfaz de servicio de almacenamiento en modo bloques de Ceph
         resize2fs /dev/rbd0
         df
 
-## Utilizacion de snapshots RBD
+## Utilización de snapshots RBD
 
   * Creamos un snapshot
 
@@ -96,7 +96,7 @@ RBD es el interfaz de servicio de almacenamiento en modo bloques de Ceph
         umount /mnt
         rbd rollback rbd/vm01-disk0@snap1 
 
-  * Volvemos a montarlo para comprobar que el fichero de test vuelve a estar ahi
+  * Volvemos a montarlo para comprobar que el fichero de test vuelve a estar ahí
 
         mount /dev/rbd0 /mnt
         ls /mnt
@@ -109,7 +109,7 @@ RBD es el interfaz de servicio de almacenamiento en modo bloques de Ceph
 
         rbd snap purge rbd/vm01-disk0
 
-## Clones de volumenes RBD 
+## Clones de volúmenes RBD 
 
 Podemos crear clones de lectura/escritura desde un snapshot. Los clones pueden tener sus propios snapshots e incluso clones
 
@@ -155,7 +155,7 @@ rbd image 'vm02-disk0':
         rbd flatten vm02-disk0
         rbd info vm02-disk0 
 
-  * Ahora "rbd info" no nos muestra ningun parent
+  * Ahora "rbd info" no nos muestra ningún parent
 
   * Puesto que el clon ya es un volumen totalmente independiente, ahora podemos borrar el snapshot original (desprotegiéndolo antes)
 
