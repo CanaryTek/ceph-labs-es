@@ -10,10 +10,10 @@ Las prácticas estan definidas para que se puedan hacer en un entorno desplegado
   * [RBD Rados Block Device](RBD_Rados_Block_Device.md)
   * [Ubicación de datos](Ubicacion_de_datos.md)
   * [Crush Maps](Crush_Maps.md)
+  * [CephFS](CephFS.md)
 
 **TODO**
 
-  * [CephFS](CephFS.md)
   * [Users and Access](Users_and_Access.md)
   * [RadosGW](RadosGW.md)
   * [Lab X: OSD failure]
