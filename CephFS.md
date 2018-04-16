@@ -47,6 +47,6 @@ ls /mnt/.snap/20180409
   * Borramos el snapshot
 
 ```
-        rmdir /mnt/.snap/20180409
+rmdir /mnt/.snap/20180409
 ```
 
