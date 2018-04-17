@@ -12,10 +12,10 @@ Las prácticas estan definidas para que se puedan hacer en un entorno desplegado
   * [Crush Maps](Crush_Maps.md)
   * [CephFS](CephFS.md)
   * [Usuarios y Permisos](Usuarios_y_Permisos.md)
+  * [RadosGW](RadosGW.md)
 
 **TODO**
 
-  * [RadosGW](RadosGW.md)
   * [Lab X: OSD failure]
   * [Lab X: MON failure]
   * [Lab X: Add new OSD host]
