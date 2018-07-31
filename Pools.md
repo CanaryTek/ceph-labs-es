@@ -2,37 +2,51 @@
 
 Las "Pools" son la base del almacenamiento en Ceph. Todos los diferentes servicios de Ceph se implementan con Pools
 
-## Operraciones basicas
+## Operaciones basicas
 
   * Listar los pools (la opcion "detail" añade los detalles de los pools)
 
-        ceph osd pool ls [detail]
+```
+ceph osd pool ls [detail]
+```
 
   * Crear un pool con 128 Placement Groups (PG)
 
-        ceph osd pool create test 128
+```
+ceph osd pool create test 128
+```
 
   * Crear un objeto en el pool
 
-        echo TEST > mydata
-        rados -p test put test_object mydata
+```
+echo TEST > mydata
+rados -p test put test_object mydata
+```
 
   * Tambien se puede hacer a traves de la entrada estandar
 
-        echo TEST rados -p test put test_object -
+```
+echo TEST rados -p test put test_object -
+```
 
   * Ver contenido de un pool
 
-        rados -p test ls
+```
+rados -p test ls
+```
 
   * Leer (descargar) un objeto
 
-        rados -p test get test_object mydata
-        cat mydata
+```
+rados -p test get test_object mydata
+cat mydata
+```
 
   * Tambien se puede volcar a la salida estandar
 
-        rados -p test get test_object -
+```
+rados -p test get test_object -
+```
 
 ## Snapshots
 
@@ -40,51 +54,109 @@ Ceph permite crear snapshots de los pools
 
   * Creamos un objeto de prueba
 
-        echo OBJECT1 | rados -p test put object1 -
+```
+echo OBJECT1 | rados -p test put object1 -
+```
 
   * Listamos el contenido del pool
 
-        rados ls -p test
+```
+rados ls -p test
+```
 
   * Creamos un snapshot llamado "test-snap01"
 
-        rados mksnap test-snap01 -p test
+```
+rados mksnap test-snap01 -p test
+```
 
   * Listamos los snapshots para asegurarnos de que se ha creado
 
-        rados lssnap -p test
+```
+rados lssnap -p test
+```
 
   * Borramos el objeto de prueba
 
-        rados rm object1 -p test
+```
+rados rm object1 -p test
+```
 
   * Listamos el contenido del pool
 
-        rados ls -p test
+```
+rados ls -p test
+```
 
   * SORPRESA! Aun vemos el objeto, porque esta referenciado por un snapshot, pero si intentamos listar el objeto no nos devolvera nada
 
-        rados ls object1 -p test
+```
+rados ls object1 -p test
+```
 
-  * Ver los objetos en los snapshots. El "overlap" debe ser cero porque solo lo tenemos en un snapshot
+  * Ver los objetos en los snapshots
 
-        rados -p test listsnaps object1
+```
+rados -p test listsnaps object1
+```
 
   * Hacer rollback de un snapshot (volver atras)
 
-        rados rollback object1 test-snap01 -p test 
+```
+rados rollback object1 test-snap01 -p test 
+```
+
+  * Si tenemos varios snapshots de un objeto, podemos leer la version de un snapshot determinado con
+
+```
+rados get object1 - -s test-snap01 -p test
+```
+
+## Exportar e importar
+
+  * Podemos "serializar" el contenido de un pool completo a un fichero
+ 
+```
+rados export test.rados_export -p test
+```
+
+  * Esto nos creara un fichero test.rados_export con todos los datos del pool
+
+  * Podemos importar ese contenido a otro pool con
+
+```
+rados import test.rados_export -p test
+```
+
+  * Podemos hacer el export a la salida estandar y comprimirlo
+
+```
+rados export - -p test | gzip > test.rados_export.gz
+```
+
+  * Podemos importar el export comprimido con
+
+```
+gunzip -c test.export.gz | rados import - -p fast-pool
+```
 
 ## Borrar un pool
 
   * Por seguridad, el borrado de pools esta deshabilitado por defecto. Es necesario habilitarlo en la configuracion de los MON
 
-        ceph tell mon.* injectargs '--mon_allow_pool_delete=1'
+```
+ceph tell mon.* injectargs '--mon_allow_pool_delete=1'
+```
 
   * Ademas, tambien por seguridad, para borrar un pool es necesario poner el nombre dos veces y una opcion "especial"
 
-        ceph osd pool delete test test --yes-i-really-really-mean-it
+```
+ceph osd pool delete test test --yes-i-really-really-mean-it
+```
 
   * Una vez que hemos borrado el pool, es recomendable volver a deshabilitar el borrado
 
-        ceph tell mon.* injectargs '--mon_allow_pool_delete=0'
+```
+ceph tell mon.* injectargs '--mon_allow_pool_delete=0'
+```
 
