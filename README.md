@@ -13,7 +13,7 @@ Las prácticas estan definidas para que se puedan hacer en un entorno desplegado
   * [CephFS](CephFS.md)
   * [Usuarios y Permisos](Usuarios_y_Permisos.md)
   * [RadosGW](RadosGW.md)
-  * [GaneshaNFS](GaneshaNFS.md)
+  * [GaneshaNFS](Ganesha_NFS.md)
 
 **TODO**
 
