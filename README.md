@@ -13,7 +13,8 @@ Las prácticas estan definidas para que se puedan hacer en un entorno desplegado
   * [CephFS](CephFS.md)
   * [Usuarios y Permisos](Usuarios_y_Permisos.md)
   * [RadosGW](RadosGW.md)
-  * [GaneshaNFS](Ganesha_NFS.md)
+  * [Ganesha NFS](Ganesha_NFS.md)
+  * [iSCSI Gateway](iSCSI_GW.md)
 
 **TODO**
 
@@ -22,5 +23,4 @@ Las prácticas estan definidas para que se puedan hacer en un entorno desplegado
   * [Lab X: Add new OSD host]
   * [Lab X: Delete a OSD host]
   * [Lab X: Replace a MON]
-  * [Lab X: iSCSI]
 
