@@ -60,10 +60,9 @@ rados ls -p test
   * Escribimos algunos objetos en el pool test
 
 ```
-rados put services /etc/services -p test
-rados put kk1 /etc/services -p test
-rados put kk2 /etc/services -p test
-rados put kk3 /etc/services -p test
+echo uno | rados put kk1 - -p test
+echo dos | rados put kk2 - -p test
+echo tres | rados put kk3 - -p test
 ```
 
   * Verificamos que los objetos se han creado
@@ -75,7 +74,7 @@ rados ls -p test
   * Listamos los objetos del pool "test2"
 
 ```
-rados ls -p test22
+rados ls -p test2
 ```
 
   * Debería darnos error porque el usuario que estamos usando "test" solo tiene permisos sobre el pool "test"
