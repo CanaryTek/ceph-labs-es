@@ -18,55 +18,65 @@ radosgw-admin user create --uid s3test --display-name="Test user for S3 API"
 
 Estos pasos pueden hacerse desde cualquier máquina con acceso al nodo RadosGW
 
-  * Instalamos sofware cliente S3 (libs3-tools)
+  * Instalamos sofware cliente s3cmd
 
-```
-zypper in libs3-tools
-```
-
-  * Establecemos las variables de entorno con las credenciales que obtuvimos al crear el usuario
-
-```
-export S3_ACCESS_KEY_ID=K9HE6BFD9BYCCL9NRHF8
-export S3_SECRET_ACCESS_KEY=QmQJAhmT33Ch1kE8FnIkoDMWtBvjQQhN8lBfbpOW
-export S3_HOSTNAME=192.168.122.21
+```shell
+zypper ar https://download.opensuse.org/repositories/Cloud:/Tools/SLE_12_SP4/Cloud:Tools.repo                     
+zypper in s3cmd                                                                                                   
 ```
 
-  * Puesto que RadosGW está usando HTTP y el comando "s3" usa HTTPS por defecto, tenemos que forzarle a usar HTTP con la opción "-u"
+  * Lanzamos configuracion
+
+```shell
+s3cmd --configure
+```
+
+  * Indicamos los siguientes parametros
+    * Access Key y Secret Key: Las del usuario que queremos usar
+    * Default Region: Dejamos US
+    * S3 Endpoint: ceph-mon1 (o donde tengamos la pasarela)
+    * DNS-style bucket: ceph-mon1 (igual que arriba)
+    * Use HTTPS protocol: No
 
   * Listamos los "buckets"
 
 ```
-s3 -u list
+s3cmd ls
 ```
 
-  * Creamos un bucket de prueba (test-bucket)
+  * Creamos un bucket de prueba (test)
 
 ```
-s3 -u create test-bucket
+s3cmd mb s3://test
 ```
 
   * Almacenamos un objeto
 
 ```
-echo "Test object" | s3 -u put test-bucket/test
+echo "Test object" | s3cmd put - s3://test/object1
 ```
 
   * Verificamos que el objeto se ha creado
 
 ```
-s3 -u list test-bucket
+s3cmd ls s3://test
 ```
 
   * Descargamos el objeto
 
 ```
-s3 -u get test-bucket/test
+s3cmd get s3://test/object1
 ```
 
   * Borramos el objeto
 
 ```
-s3 -u delete test-bucket/test
+s3cmd rm s3://test/object1
+```
+
+  * Borramos el bucket
+
+```
+s3cmd rb s3://test
 ```
 
