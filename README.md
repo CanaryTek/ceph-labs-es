@@ -19,12 +19,12 @@ Las prácticas estan definidas para que se puedan hacer en un entorno desplegado
   * [RadosGW](labs/08_RadosGW.md)
   * [Ganesha NFS](labs/09_Ganesha_NFS.md)
   * [iSCSI Gateway](labs/10_iSCSI_GW.md)
+  * [Eliminar un osd](labs/11_Remove_osd.md)
+  * [Añadir un osd](labs/12_Add_osd.md)
 
 **TODO**
 
   * [Lab X: OSD failure]
   * [Lab X: MON failure]
-  * [Lab X: Add new OSD host]
-  * [Lab X: Delete a OSD host]
   * [Lab X: Replace a MON]
 
