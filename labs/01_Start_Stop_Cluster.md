@@ -100,3 +100,9 @@ ceph status
 salt "ceph-mon*" cmd.run "systemctl stop ntpd ; ntpdate -dv ceph-admin; systemctl start ntpd"
 ```
 
+  * Otra incidencia habitual es que algun servicio no haya arrancado correctamente. Podemos forzar el arranque con
+
+```
+salt "*" cmd.run "systemctl start ceph.target"
+```
+
