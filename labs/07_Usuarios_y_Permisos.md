@@ -13,8 +13,8 @@ ceph auth list
   * Crear pools test y test2
 
 ```
-ceph osd pool create test 128
-ceph osd pool create test2 128
+ceph osd pool create test 16
+ceph osd pool create test2 16
 ```
 
   * Crear un usuario que solo podrá acceder al pool "test"
@@ -25,29 +25,25 @@ ceph auth get-or-create client.test mon 'allow r' osd 'allow rw pool=test' > cep
 
   * El comando anterior volcará el usuario y su clave en el fichero "ceph.client.test.keyring"
 
-  * Copiar el fichero "ceph.client.test.keyring" al directorio /etc/ceph (o cualquier otro) de la maquina remota desde donde vayamos a acceder
-
 ## Acceso a pools con rados
 
-Esta sección debe realizarse desde la maquina remota donde hemos copiado el fichero keyring de la sección anterior
+Ahora vamos a operar con rados como el usuario "test" que hemos creado, debemos indicar el usuario y keyring en todos los comandos con las opciones "--id test -k /root/ceph.client.test.keyring"
+
+  * Si no queremos incluir la opción en todos los comandos que tecleamos, podemos añadirla a la variable de entorno CEPH_ARGS y se añadirá automáticamente.
+
+```
+export CEPH_ARGS="-k /root/ceph.client.test.keyring --id test"
+```
+
+  * Cuando quieras dejar de operar como ese usuario, elimina la variable de entorno
+
+```
+unset CEPH_ARGS
+```
 
   * Listar los pools
 
 ```
-rados lspools
-```
-
-  * El comando anterior fallará porque tenemos que decirle qué usuario y clave queremos usar para validarnos al cluster Ceph. Por defecto de usa "admin" y se buscan varios ficheros keyring en /etc/ceph
-  * Probamos otra vez especificando el usuario y el fichero keyring
-
-```
-rados -k ceph.client.test.keyring --id test lspools
-```
-
-  * Puesto que especificar el usuario y keyring en cada comando es un engorro, podemos especificarlos en una variable de entorno
-
-```
-export CEPH_ARGS="-k ceph.client.test.keyring --id test"
 rados lspools
 ```
 
@@ -60,9 +56,10 @@ rados ls -p test
   * Escribimos algunos objetos en el pool test
 
 ```
-echo uno | rados put kk1 - -p test
-echo dos | rados put kk2 - -p test
-echo tres | rados put kk3 - -p test
+echo uno | rados -p test put kk1 -
+echo dos | rados -p test put kk2 -
+echo tres | rados -p test put kk3 -
+echo obj1 | rados -p test put obj1 -
 ```
 
   * Verificamos que los objetos se han creado
@@ -86,15 +83,15 @@ Puesto que tener muchos pools implica una gran carga al cluster Ceph, no pueden 
   * Creamos un usuario test2 con acceso a pool test, pero solo a los objetos cuyo nombre empiecen por "kk"
 
 ```
-ceph auth get-or-create client.test2 mon "allow *" osd "allow rw pool=test object_prefix kk"
+ceph auth get-or-create client.test2 mon "allow *" osd "allow rw pool=test object_prefix kk" > ceph.client.test2.keyring
 ```
 
   * Desde el host cliente, intentamos descargar objetos desde el pool test
 
 ```
-rados -k ceph.client.test2.keyring --id test2 -p test get kk1 kk1
-rados -k ceph.client.test2.keyring --id test2 -p test get kk2 kk2
-rados -k ceph.client.test2.keyring --id test2 -p test get services services
+rados -k ceph.client.test2.keyring --id test2 -p test get kk1 -
+rados -k ceph.client.test2.keyring --id test2 -p test get kk2 -
+rados -k ceph.client.test2.keyring --id test2 -p test get obj1 -
 ```
 
   * Solo debería permitirnos descargar los objetos que empiezan por "kk" (kk1 y kk2)
@@ -106,17 +103,17 @@ Puesto que la granularidad de acceso por pool no es escalable y la basada en obj
   * Modificamos el usuario test2 para que solo tenga acceso al namespace "nm1" en el pool test
 
 ```
-ceph auth get-or-create client.test2 mon "allow *" osd "allow rw pool=test namespace=nm1"
+ceph auth caps client.test2 mon "allow *" osd "allow rw pool=test namespace=nm1"
 ```
 
   * Con el usuario administrador, escribimos varios objetos en el namespace nm1 del pool test
 
 ```
-rados put kk1 /etc/services -p test -N nm1
-rados put kk2 /etc/services -p test -N nm1
+echo uno | rados -p test -N nm1  put kk1 -
+echo dos | rados -p test -N nm1  put kk2 -
 ```
 
-  * Desde la maquina cliente Ceph, intentamos listar con el usuario test2 los diferentes namespaces del pool test
+  * Intentamos listar con el usuario test2 los diferentes namespaces del pool test
 
 ```
 rados -k ceph.client.test2.keyring --id test2 -p test -N nm1 ls
@@ -183,21 +180,14 @@ mkdir /mnt/test-home /mnt/private1 /mnt/private2
 ceph auth caps client.test mon "allow r" osd 'allow * pool=cephfs_data' mds "allow * path=/test-home"
 ```
 
-  * En versiones recientes de ceph se puede usar el comando "ceph fs authorize"
+  * Montamos el CephFS como usuario test en otro directorio
 
 ```
-ceph fs authorize cephfs client.test /test-home rw
+mkdir /mnt2
+mount -t ceph ceph-mon1:/ /mnt2/ -oname=test,secret=AQD0wmxawfKqFBAAhbRnIACauIOgYZ4nNAHAWg==
 ```
 
-  * Desde la maquina remota, montamos el CephFS como usuario test
-
-```
-mount -t ceph ceph-mon1:/ /mnt/ -oname=test,secret=AQD0wmxawfKqFBAAhbRnIACauIOgYZ4nNAHAWg==
-```
-
-  * Deberíamos tener acceso únicamente a /mnt/test-home
-
-  * También puede montarse únicamente el directorio al que tenemos acceso
+  * No deberia dejarnos montarlo, solo tenemos acceso al subarbol /test-home. Montamos ese:
 
 ```
 mount -t ceph ceph-mon1:/test-home /mnt/ -oname=test,secret=AQD0wmxawfKqFBAAhbRnIACauIOgYZ4nNAHAWg==
