@@ -14,7 +14,7 @@ En este lab configuramos el acceso iSCSI MPIO con multipath
 
 Ahora vamos a hacer la configuracion en el cliente. Usaremos la maquina ceph-test
 
-  * Conectar a la máquina ceph-test (192.168.124.10)
+  * Conectar a la máquina ceph-test (10.10.11.10)
 
 ```shell
 ssh root@ceph-test
@@ -23,7 +23,7 @@ ssh root@ceph-test
   * Instalar software necesario
 
 ```shell
-zypper in yast2-iscsi-client yast2-multipath yast2-storage
+zypper in yast2-iscsi-client yast2-storage
 ```
 
   * Activamos y arrancamos multipathd
