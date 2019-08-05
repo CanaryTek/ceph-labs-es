@@ -54,14 +54,14 @@ sudo rake destry_vms
 
   6. Instalar SLE SP4 en todas las maquinas con las siguientes opciones:
 
-    * No registrar el sistema (Skip Registration)
-    * Instalar perfil "Default System" (Luego ajustaremos que paquetes instalar)
-    * En Partitioning, seleccionar "Create Partition Setup"
-      * Seleccionar **unicamente** el primer disco
-      * Seleccionar "Edit Proposal" y desactivar la opcion a "Separate home partition"
-    * Seleccionar "Skip user creation"
-    * Cuando lleguemos al resumen final, seleccionar el software a instalar y deseleccionar Gnome y X Windows
-    * Seleccionar "Disable Firewall"
+   * No registrar el sistema (Skip Registration)
+   * Instalar perfil "Default System" (Luego ajustaremos que paquetes instalar)
+   * En Partitioning, seleccionar "Create Partition Setup"
+     * Seleccionar **unicamente** el primer disco
+     * Seleccionar "Edit Proposal" y desactivar la opcion a "Separate home partition"
+   * Seleccionar "Skip user creation"
+   * Cuando lleguemos al resumen final, seleccionar el software a instalar y deseleccionar Gnome y X Windows
+   * Seleccionar "Disable Firewall"
 
   7. Configurar la red en todas las maquinas con la configuracion indicada en la tabla de arriba (Yast -> System -> Network Settings)
 
