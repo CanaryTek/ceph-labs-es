@@ -102,6 +102,7 @@ sudo btrfs snap .snapshots/01_after_installation vm
   * [Lab 10: iSCSI Gateway](labs/10_iSCSI_GW.md)
   * [Lab 11: Eliminar un osd](labs/11_Remove_osd.md)
   * [Lab 12: Añadir un osd](labs/12_Add_osd.md)
+  * [Lab 99: Tareas Adicionales](labs/99_Tareas_adicionales.md)
 
 **TODO**
 
