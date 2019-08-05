@@ -99,9 +99,9 @@ ceph status
 ```shell
 salt "ceph-mon*" cmd.run "systemctl stop ntpd ; ntpdate -dv ceph-admin; systemctl start ntpd"
 ```
-
   * Tambien puede pasar que los servicios no arranquen correctamente y el comando "ceph -s" se queda atascado. En ese caso pueden pararse y volver a arrancarse con:
 
 ```shell
 salt "*" cmd.run "systemctl stop ceph.target; systemctl start ceph.target"
 ```
+

@@ -219,12 +219,31 @@ gunzip -c test.export.gz | rados import -p fast-pool -
 
   * Incluso podemos hacerlo con un pipe, sin fichero intermedio
 
-```
+```shell
 rados mkpool test_import2
 rados export -p test - | rados -p test_import2 import -
 ```
 
   * El proceso export/import conserva los metadatos de los objetos
+
+## Renombrar un pool
+
+Aunque se puede renombrar un pool, hay que tener precaucion al hacerlo porque puede afectar a configuraciones de acceso de cliente.
+Por ejemplo, el control de acceso por parte de usuarios, se establece por **nombre** del pool, asi que si se renombra habra que actualizar todas las ACL
+
+  * Creamos un pool
+
+```shell
+ceph osd pool create test1 16
+```
+
+  * Renombramos el pool
+
+
+```shell
+ceph osd pool rename test1 test2
+```
+
 
 ## Borrar un pool
 
