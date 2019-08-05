@@ -96,7 +96,12 @@ ceph status
 
   * La incidencia más habitual es la falta de sincronización de relojes entre los MON. Podemos forzar a que se sincronicen con (asumiendo que el servidor NTP es "ceph-admin"): 
 
-```
+```shell
 salt "ceph-mon*" cmd.run "systemctl stop ntpd ; ntpdate -dv ceph-admin; systemctl start ntpd"
 ```
 
+  * Tambien puede pasar que los servicios no arranquen correctamente y el comando "ceph -s" se queda atascado. En ese caso pueden pararse y volver a arrancarse con:
+
+```shell
+salt "*" cmd.run "systemctl stop ceph.target; systemctl start ceph.target"
+```
