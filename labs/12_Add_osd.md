@@ -4,13 +4,20 @@ En este lab añadiremos un nuevo osd al cluster
 
 Partimos del supuesto de que hemos añadido un nuevo disco a un nodo (nuevo o en sustitucion de uno dañado), y queremos añadirlo al cluster.
 
+**¡OJO!**: Este procedimiento utiliza el descubrimiento automático de discos, y solo puede ser usado si no hemos hecho modificaciones en las configuraciones
+
 ## Añadir el osd
+
+  * Para que nos genere nuevos proposals en las maquinas donde se han instalado nuevos  discos, tenemos que borrar los proposals que ya existan en /srv/pillar/ceph/proposals/profile-default/stack/default/ceph/minions/
 
   * Podemos monitorizar el estado del cluster durante todo el proceso con
 
 ```shell
 ceph -w
 ```
+
+Ejecutar stage 1,2 y 3
+
 
   * Como medida de protección, en caso de que el disco a añadir contenga datos reconocibles, no se añadira al custer. Asi que el primer paso será inicializarlo para eliminar particiones y datos reconocibles
   * En la maquina donde tenemos el nuevo disco, lo inicializamos con: (asumimos que es el disco /dev/vdd)
@@ -25,41 +32,15 @@ ceph-disk zap /dev/vdd
 deepsea monitor
 ```
 
-  * Ejecutamos la fase de descubrimiento de discos
+  * Ejecutamos las fases 1 y 2. Se nos deberian generar nuevos proposals para las maquinas donde hemos instalado nuevos discos
 
 ```shell
 salt-run state.orch ceph.stage.1
-
+salt-run state.orch ceph.stage.2
 ```
 
-  * En la propuesta "proposal" de esa maquina, nos deberia aparecer el nuevo disco
-
-  * El osd que ha fallado es el 0, lo eliminamos
-
+  * Ejecutar la fase 3 para que se creen los nuevos osd y se añadan al cluster
 
 ```shell
-salt-run remove.osd 0
-[ERROR   ] ('Safety is not disengaged...refusing to remove OSD', ' run "salt-run disengage.safety" first THIS WILL CAUSE DATA LOSS.')
-```
-
-  * Como mecanismo de seguridad, DeepSea implementa un mecanismo de bloqueo para evitar borrados accidentales. Tenemos que desactivar esa proteccion
-
-```shell
-salt-run disengage.safety
-```
-
-  * Ahora si nos dejara eliminar el osd
-
-```shell
-salt-run remove.osd 0
-[ERROR   ] ('Safety is not disengaged...refusing to remove OSD', ' run "salt-run disengage.safety" first THIS WILL CAUSE DATA LOSS.')
-```
-
-  * No es necesario volver a activar la protección, porque se activa automaticamente pasados unos minutos
-
-  * Si ahora miramos el arbol de OSD veremos que ya no aparece el 0, y el cluster esta en HEALTH_OK
-
-```shell
-ceph -s
-ceph osd tree
+salt-run state.orch ceph.stage.3
 ```
