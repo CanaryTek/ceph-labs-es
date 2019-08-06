@@ -73,6 +73,24 @@ Para añadir una nueva clave, solo habra que añadirla al "pillar" y aplicar el 
 salt "*" state.apply local.ssh
 ```
 
+### Baja de una (o varias claves)
+
+La semantica de definicion de claves SSH en SaltStack no incluye ninguna opcion para indicar que se deben incluir solo las claves definidas. Para "simular" ese comportamiento podemos simplemente truncar el fichero de claves SSH y luego aplicar el estado.
+
+  * Editar el fichero /srv/pillar/local/ssh-keys.sls y eliminar las claves que ya no queremos permitir
+
+  * Truncar el fichero de claves SSH permitidas
+
+```shell
+salt "*" cmd.run "truncate -s0 /root/.ssh/authorized_keys"
+```
+
+  * Aplicar el "state"
+
+```shell
+salt "*" state.apply local.ssh
+```
+
 ## Personalizar configuracion NTP
 
 La configuracion por defecto de SES5 es usar como servidor NTP para todos los nodos la maquina de administracion (en nuestro caso, ceph-admin).
